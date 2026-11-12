@@ -1,0 +1,63 @@
+/* SearchBar.css */
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  overflow: hidden;
+}
+
+.search-bar--focused {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+  background: var(--bg-surface);
+}
+
+.search-bar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+.search-bar__icon svg { width: 18px; height: 18px; }
+
+.search-bar--focused .search-bar__icon { color: var(--gold); }
+
+.search-bar__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  padding: 14px 0;
+  min-width: 0;
+  /* Hide native clear button on webkit */
+}
+.search-bar__input::placeholder { color: var(--text-muted); }
+.search-bar__input::-webkit-search-cancel-button { display: none; }
+
+.search-bar__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+  flex-shrink: 0;
+}
+.search-bar__clear:hover { color: var(--text-primary); background: var(--bg-elevated); }
+.search-bar__clear svg { width: 14px; height: 14px; }

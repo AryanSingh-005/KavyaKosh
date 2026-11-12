@@ -1,0 +1,135 @@
+/* ===== SubscribeModal.css ===== */
+
+.sub-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.8);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn .25s ease;
+}
+
+.sub-modal-panel {
+  background: #1a1625;
+  border: 1px solid rgba(139,92,246,.3);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem 2rem;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  animation: slideUp .3s ease;
+}
+
+.sub-modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: rgba(255,255,255,.07);
+  border: none; color: rgba(255,255,255,.5);
+  border-radius: 50%; width: 2rem; height: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: pointer;
+  transition: background .2s;
+}
+.sub-modal-close:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+.sub-modal-header { text-align: center; margin-bottom: 1.75rem; }
+
+.sub-modal-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+
+.sub-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 .4rem;
+}
+
+.sub-modal-subtitle { font-size: .82rem; color: rgba(255,255,255,.4); margin: 0; }
+
+/* Form */
+.sub-modal-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.sub-form-group { display: flex; flex-direction: column; gap: .4rem; }
+
+.sub-form-label {
+  font-size: .8rem; font-weight: 600;
+  color: rgba(255,255,255,.7);
+}
+
+.sub-form-input {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: .65rem;
+  color: var(--text-primary);
+  font-size: .9rem;
+  padding: .75rem 1rem;
+  width: 100%; box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color .2s, box-shadow .2s;
+}
+.sub-form-input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139,92,246,.15);
+}
+
+.sub-card-input-row {
+  position: relative;
+}
+.sub-form-input--card { padding-right: 2.5rem; }
+.sub-card-brand {
+  position: absolute; right: .85rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem; pointer-events: none;
+}
+
+.sub-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+.sub-modal-error {
+  background: rgba(239,68,68,.1);
+  border: 1px solid rgba(239,68,68,.3);
+  color: #fca5a5;
+  border-radius: .6rem;
+  padding: .65rem .9rem;
+  font-size: .82rem;
+}
+
+.sub-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .75rem 1rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: .65rem;
+  font-size: .85rem;
+  color: rgba(255,255,255,.6);
+}
+.sub-total-amount { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); }
+
+.sub-submit-btn {
+  width: 100%;
+  padding: .9rem;
+  border: none;
+  border-radius: .75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s, transform .2s;
+  margin-top: .25rem;
+}
+.sub-submit-btn:hover { opacity: .9; transform: translateY(-1px); }
+.sub-submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.sub-submit-btn--lite { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; }
+.sub-submit-btn--pro  { background: linear-gradient(135deg, #f59e0b, #d97706); color: #1a1a1a; }
+
+.sub-secure-note {
+  text-align: center;
+  font-size: .75rem;
+  color: rgba(255,255,255,.3);
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .sub-form-row { grid-template-columns: 1fr; }
+}

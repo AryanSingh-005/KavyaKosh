@@ -1,0 +1,54 @@
+# =============================================================================
+# Root .gitignore for KavyaKosh
+# NEVER commit environment files, private credentials, or keys to Git
+# =============================================================================
+
+# Environment and Secret Files
+.env
+.env.*
+!.env.example
+*.env
+application-local.yml
+application-local.properties
+application-secrets.yml
+secrets.json
+
+# Local overrides
+*.local
+
+# Node & Frontend Build Artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+
+# Java & Backend Build Artifacts
+backend/target/
+target/
+*.class
+*.jar
+*.war
+.gradle/
+build/
+
+# IDE & Editor Files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

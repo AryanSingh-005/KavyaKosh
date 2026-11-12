@@ -1,0 +1,659 @@
+/* =====================================================
+   KavyaKosh Design System — index.css
+   Dark-mode premium aesthetic with glassmorphism
+   ===================================================== */
+
+@import "tailwindcss";
+
+/* --- Google Fonts are loaded via index.html --- */
+
+/* =====================================================
+   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   ===================================================== */
+:root {
+  /* Backgrounds */
+  --bg-base: #08080f;
+  --bg-surface: #0f0f1a;
+  --bg-elevated: rgba(255, 255, 255, 0.06);
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+  --bg-glass: rgba(15, 15, 30, 0.7);
+  --bg-overlay: rgba(8, 8, 15, 0.85);
+
+  /* Brand Colors */
+  --gold: #d4af37;
+  --gold-light: #e8c84b;
+  --gold-dim: rgba(212, 175, 55, 0.15);
+  --gold-glow: rgba(212, 175, 55, 0.3);
+
+  --purple: #7c5cfc;
+  --purple-light: #9b7eff;
+  --purple-dim: rgba(124, 92, 252, 0.15);
+  --purple-glow: rgba(124, 92, 252, 0.35);
+
+  --rose: #e05c97;
+  --rose-dim: rgba(224, 92, 151, 0.15);
+
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45, 212, 191, 0.15);
+
+  /* Text */
+  --text-primary: #f0ede8;
+  --text-secondary: #a09a8e;
+  --text-muted: #5a5652;
+  --text-gold: var(--gold);
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.07);
+  --border-gold: rgba(212, 175, 55, 0.25);
+  --border-active: rgba(212, 175, 55, 0.5);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-gold: 0 0 30px rgba(212, 175, 55, 0.15);
+  --shadow-purple: 0 0 30px rgba(124, 92, 252, 0.2);
+
+  /* Typography */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --nav-height: 72px;
+  --section-py: 96px;
+  --container-max: 1280px;
+  --container-px: 24px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* =====================================================
+   LIGHT MODE OVERRIDES
+   ===================================================== */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-base:       #f5f0e8;
+  --bg-surface:    #ede7d9;
+  --bg-elevated:   rgba(0, 0, 0, 0.05);
+  --bg-card:       rgba(255, 255, 255, 0.9);
+  --bg-card-hover: #ffffff;
+  --bg-glass:      rgba(245, 240, 232, 0.92);
+  --bg-overlay:    rgba(245, 240, 232, 0.95);
+
+  /* Text */
+  --text-primary:   #1c1710;
+  --text-secondary: #5a4f3e;
+  --text-muted:     #9c8e7a;
+
+  /* Borders */
+  --border:        rgba(0, 0, 0, 0.1);
+  --border-gold:   rgba(160, 110, 10, 0.35);
+  --border-active: rgba(160, 110, 10, 0.65);
+
+  /* Shadows */
+  --shadow-card:   0 2px 16px rgba(0, 0, 0, 0.1);
+  --shadow-gold:   0 0 24px rgba(180, 130, 20, 0.15);
+  --shadow-purple: 0 0 24px rgba(100, 70, 200, 0.12);
+
+  /* Gold stays warm but slightly deeper for contrast on light */
+  --gold:          #b8860b;
+  --gold-light:    #d4a017;
+  --gold-dim:      rgba(184, 134, 11, 0.12);
+  --gold-glow:     rgba(184, 134, 11, 0.25);
+
+  --purple-dim:    rgba(100, 70, 200, 0.1);
+  --rose-dim:      rgba(180, 50, 100, 0.1);
+  --teal-dim:      rgba(20, 160, 140, 0.1);
+}
+
+/* Apply base colors to html/body in light mode */
+[data-theme="light"],
+[data-theme="light"] body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+}
+
+/* Fix all hardcoded dark backgrounds used in component CSS */
+[data-theme="light"] .poem-card,
+[data-theme="light"] .glass-card,
+[data-theme="light"] .studio-panel,
+[data-theme="light"] .poem-result-card,
+[data-theme="light"] .history-drawer,
+[data-theme="light"] .explore-page__results-bar,
+[data-theme="light"] .explore-page__filter-toggle,
+[data-theme="light"] .filter-bar,
+[data-theme="light"] .filter-section,
+[data-theme="light"] .book-card,
+[data-theme="light"] .discussion-card,
+[data-theme="light"] .competition-card,
+[data-theme="light"] .review-card,
+[data-theme="light"] .profile-card,
+[data-theme="light"] .notification-panel,
+[data-theme="light"] .marketplace-card {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Fix hardcoded dark textareas / inputs */
+[data-theme="light"] .studio-textarea,
+[data-theme="light"] .studio-input,
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="email"],
+[data-theme="light"] input[type="password"],
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: #ffffff;
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+[data-theme="light"] .studio-textarea::placeholder,
+[data-theme="light"] .studio-input::placeholder,
+[data-theme="light"] textarea::placeholder,
+[data-theme="light"] input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Fix poem text inside result card */
+[data-theme="light"] .poem-result-card__body {
+  background: rgba(0,0,0,0.03);
+  border-color: var(--border);
+}
+[data-theme="light"] .poem-text {
+  color: var(--text-primary);
+}
+
+/* Fix hero blobs — tone them down in light */
+[data-theme="light"] .hero__blob--purple {
+  background: radial-gradient(circle, rgba(100,70,200,0.08) 0%, transparent 70%);
+}
+[data-theme="light"] .hero__blob--gold {
+  background: radial-gradient(circle, rgba(180,130,20,0.1) 0%, transparent 70%);
+}
+
+/* Fix section backgrounds */
+[data-theme="light"] .trending-poems,
+[data-theme="light"] .section,
+[data-theme="light"] .explore-page,
+[data-theme="light"] .ai-studio-page,
+[data-theme="light"] .publish-page,
+[data-theme="light"] .profile-page,
+[data-theme="light"] .marketplace-page,
+[data-theme="light"] .competitions-page,
+[data-theme="light"] .discussions-page,
+[data-theme="light"] .reviews-page,
+[data-theme="light"] .premium-page {
+  background: var(--bg-base);
+}
+
+/* Fix navbar link hover in light */
+[data-theme="light"] .navbar__link:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-primary);
+}
+[data-theme="light"] .navbar__link--active {
+  background: var(--gold-dim);
+  color: var(--gold);
+}
+
+/* Fix btn-ghost in light */
+[data-theme="light"] .btn-ghost {
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+[data-theme="light"] .btn-ghost:hover {
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+
+/* Fix selector chips in AI Studio */
+[data-theme="light"] .selector-chip {
+  background: rgba(0,0,0,0.04);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+[data-theme="light"] .selector-chip:hover {
+  background: rgba(0,0,0,0.07);
+}
+[data-theme="light"] .selector-chip--active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Fix mode switcher */
+[data-theme="light"] .mode-switcher {
+  background: rgba(0,0,0,0.04);
+  border-color: var(--border);
+}
+[data-theme="light"] .mode-btn { color: var(--text-secondary); }
+[data-theme="light"] .mode-btn--active {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: var(--border-gold);
+}
+
+/* Fix action buttons on result card */
+[data-theme="light"] .action-btn {
+  background: rgba(0,0,0,0.05);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+[data-theme="light"] .action-btn:hover {
+  background: rgba(0,0,0,0.09);
+}
+
+/* Fix result badges */
+[data-theme="light"] .result-badge {
+  background: rgba(0,0,0,0.06);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+/* Fix history drawer overlay */
+[data-theme="light"] .history-drawer-overlay {
+  background: rgba(0,0,0,0.3);
+}
+[data-theme="light"] .history-item {
+  border-color: var(--border);
+}
+[data-theme="light"] .history-item:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* Fix footer */
+[data-theme="light"] .footer {
+  background: var(--bg-surface);
+  border-color: var(--border);
+}
+
+/* Fix bottom nav */
+[data-theme="light"] .bottom-nav {
+  background: var(--bg-glass);
+  border-color: var(--border);
+}
+
+/* Fix scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg-surface); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(180,130,20,0.3); }
+
+/* Fix stanza slider */
+[data-theme="light"] .stanza-slider {
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
+}
+
+/* Fix error box */
+[data-theme="light"] .studio-error {
+  background: rgba(200,50,50,0.08);
+  border-color: rgba(200,50,50,0.25);
+  color: #b91c1c;
+}
+
+/* Fix suggestion chips */
+[data-theme="light"] .suggestion-chip {
+  background: rgba(0,0,0,0.04);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+[data-theme="light"] .suggestion-chip:hover {
+  background: var(--gold-dim);
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* =====================================================
+   LAYOUT UTILITIES
+   ===================================================== */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-px);
+}
+
+.section {
+  padding: var(--section-py) 0;
+}
+
+.section--sm {
+  padding: 64px 0;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
+.font-serif { font-family: var(--font-serif); }
+.font-sans  { font-family: var(--font-sans);  }
+
+.text-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.text-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.text-subheading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.text-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* =====================================================
+   GLOBAL GRADIENT TEXT
+   ===================================================== */
+.gradient-gold {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, #b8960a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, var(--purple-light) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, #b8960a 100%);
+  color: #1a1200;
+  box-shadow: 0 4px 20px var(--gold-glow);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--gold-glow);
+}
+
+.btn-secondary {
+  background: var(--purple-dim);
+  color: var(--purple-light);
+  border: 1px solid rgba(124, 92, 252, 0.3);
+}
+.btn-secondary:hover {
+  background: rgba(124, 92, 252, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+}
+
+/* =====================================================
+   GLASS CARD BASE
+   ===================================================== */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-gold);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card), var(--shadow-gold);
+}
+
+/* =====================================================
+   SECTION HEADER
+   ===================================================== */
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 16px;
+}
+
+.section-header__eyebrow {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.section-header__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.section-header__link {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.section-header__link:hover { color: var(--gold); }
+
+/* =====================================================
+   BADGE / TAG
+   ===================================================== */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.badge--gold {
+  background: var(--gold-dim);
+  color: var(--gold-light);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.badge--purple {
+  background: var(--purple-dim);
+  color: var(--purple-light);
+  border: 1px solid rgba(124, 92, 252, 0.2);
+}
+
+.badge--rose {
+  background: var(--rose-dim);
+  color: var(--rose);
+  border: 1px solid rgba(224, 92, 151, 0.2);
+}
+
+.badge--teal {
+  background: var(--teal-dim);
+  color: var(--teal);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+}
+
+/* =====================================================
+   STAT PILL
+   ===================================================== */
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+.stat-pill:hover { color: var(--gold); }
+.stat-pill svg { width: 14px; height: 14px; }
+
+/* =====================================================
+   DIVIDER
+   ===================================================== */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0;
+}
+
+/* =====================================================
+   AMBIENT BACKGROUND BLOBS
+   ===================================================== */
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.45);
+}
+
+/* =====================================================
+   RESPONSIVE HELPERS
+   ===================================================== */
+@media (max-width: 768px) {
+  :root {
+    --section-py: 64px;
+    --container-px: 16px;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* =====================================================
+   MOBILE TOUCH TARGETS & POEM TEXT WRAPPING UTILITIES
+   ===================================================== */
+.poem-text-wrap {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.8;
+}
+
+.touch-target,
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+/* Compact exceptions inside pills / small icon tags */
+.btn-sm,
+.badge,
+.score-mini-pill,
+.stat-pill {
+  min-height: initial;
+}
+

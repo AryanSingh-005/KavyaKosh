@@ -1,0 +1,72 @@
+/* PoemDetailPage.css */
+
+.poem-detail-page {
+  min-height: 100vh;
+  padding-top: calc(var(--nav-height, 70px) + 20px);
+  padding-bottom: 60px;
+  background: var(--bg-base, #08080f);
+  color: var(--text-primary, #f8fafc);
+}
+
+.poem-detail-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-top-nav {
+  display: flex;
+  align-items: center;
+}
+
+.back-link {
+  color: #d4af37;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #ffd700;
+}
+
+.detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+  color: #94a3b8;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+}
+
+.detail-error {
+  text-align: center;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.detail-error h2 {
+  color: #f8fafc;
+  margin: 0;
+}
+
+.btn-explore-back {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #d4af37;
+  color: #000;
+  font-weight: 700;
+  text-decoration: none;
+}
