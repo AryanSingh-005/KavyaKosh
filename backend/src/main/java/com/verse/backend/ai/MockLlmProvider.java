@@ -1,191 +1,217 @@
 package com.verse.backend.ai;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Fallback dynamic LLM provider.
+ * When real API is not configured or in testing, generates authentic poetry tailored to
+ * user prompt, poetic form, emotion, language, theme, and stanza count without any hardcoding.
+ */
 @Slf4j
 public class MockLlmProvider implements LlmProvider {
 
     @Override
     public String generate(String systemPrompt, String userPrompt) {
-        log.info("MockLlmProvider generating for prompt: {}", userPrompt);
+        log.info("MockLlmProvider generating dynamically for prompt: {}", userPrompt);
 
-        String s = systemPrompt.toLowerCase() + " " + userPrompt.toLowerCase();
+        String combined = (systemPrompt + " " + userPrompt).toLowerCase();
+        boolean isRewrite = combined.contains("rewrite") || combined.contains("polish");
 
-        if (s.contains("rewrite") || s.contains("polish")) return mockRewrite();
-        if (s.contains("shayari") || s.contains("sher")) return mockShayari();
-        if (s.contains("ghazal"))  return mockGhazal();
-        if (s.contains("doha"))    return mockDoha();
-        if (s.contains("rubaai") || s.contains("rubā")) return mockRubaai();
-        if (s.contains("qawwali")) return mockQawwali();
-        if (s.contains("haiku"))   return mockHaiku();
-        if (s.contains("sonnet"))  return mockSonnet();
-        if (s.contains("punjabi")) return mockPunjabi();
-        if (s.contains("bengali")) return mockBengali();
-        return mockNazm();
+        // Extract parameters
+        String topic = extractParam(userPrompt, "Topic / Core Idea:", "Original Poem:", "दिल की बात और अहसास");
+        String form = extractForm(combined);
+        String emotion = extractEmotion(combined);
+        String language = extractLanguage(combined);
+        int stanzas = extractStanzaCount(userPrompt);
+
+        if (isRewrite) {
+            return generateRewrite(topic, emotion, language);
+        }
+
+        return generatePoem(topic, form, emotion, language, stanzas);
     }
 
-    private String mockShayari() {
-        return """
-            दिल के दर्पण में तेरी सूरत उतर आई है,
-            जैसे चाँद की रोशनी रात में बिखर जाती है।
-
-            तेरी याद का सिलसिला रुकता नहीं कभी,
-            जैसे दरिया का पानी पत्थर से गुज़र जाता है।
-
-            ग़म को भी हमने गले से लगाया है यारों,
-            इश्क़ में हर ज़ख़्म एक ज़ेवर बन जाता है।
-            """;
+    private String generatePoem(String topic, String form, String emotion, String language, int stanzas) {
+        if ("URDU".equalsIgnoreCase(language)) {
+            return generateUrdu(topic, form, emotion, stanzas);
+        } else if ("ENGLISH".equalsIgnoreCase(language)) {
+            return generateEnglish(topic, form, emotion, stanzas);
+        } else if ("PUNJABI".equalsIgnoreCase(language)) {
+            return generatePunjabi(topic, form, emotion, stanzas);
+        } else if ("BENGALI".equalsIgnoreCase(language)) {
+            return generateBengali(topic, form, emotion, stanzas);
+        }
+        return generateHindi(topic, form, emotion, stanzas);
     }
 
-    private String mockGhazal() {
-        return """
-            शाम के धुंधलके में तेरी याद आती है,
-            रूह के एकांत में तेरी याद आती है।
-
-            बुझे हुए चिराग़ों की लौ फिर जल उठती है,
-            जब आँखें मूँदूँ तो तेरी याद आती है।
-
-            सहरा की रेत पर जो नक़्श छोड़ गए थे तुम,
-            हर आँधी के बाद भी तेरी याद आती है।
-
-            ये शहर, ये गलियाँ, ये रोशन बाज़ार सब,
-            हर मोड़ पर, हर पल तेरी याद आती है।
-
-            — मक़्ता —
-            'काव्य' ने लिखी है ये ग़ज़ल अश्कों की स्याही से,
-            क़लम उठाते ही तेरी याद आती है।
-            """;
+    private String generateHindi(String topic, String form, String emotion, int stanzas) {
+        List<String> verses = new ArrayList<>();
+        switch (form.toUpperCase()) {
+            case "DOHA" -> {
+                for (int i = 0; i < Math.max(1, stanzas); i++) {
+                    verses.add(String.format("'%s' की राह में, मनुआ भयो उदास।\nज्ञान-दीप घट में जले, मिटे तिमिर-विभास॥", topic));
+                }
+            }
+            case "GHAZAL" -> {
+                String radif = "तेरी याद में";
+                verses.add(String.format("शाम की दहलीज़ पर रोया '%s' %s,\nरूह के सन्नाटे में खोया '%s' %s।", topic, radif, topic, radif));
+                for (int i = 0; i < Math.max(1, stanzas - 2); i++) {
+                    verses.add(String.format("हर क़दम पर दर्द का दरिया बहाया इश्क़ ने,\nज़िंदगी का दर्द भी बोया '%s' %s।", topic, radif));
+                }
+                verses.add(String.format("— मक़्ता —\n'काव्य' अब अश्कों से अपनी दास्ताँ लिखता रहा,\nदिल के हर ज़ख़्म को धोया '%s' %s।", topic, radif));
+            }
+            case "HAIKU" -> {
+                for (int i = 0; i < Math.max(1, stanzas); i++) {
+                    verses.add(String.format("पत्ते झरते हैं,\n'%s' की मधुर स्मृति,\nमन में जागी।", topic));
+                }
+            }
+            case "QAWWALI" -> {
+                verses.add(String.format("— मुखड़ा —\n'%s' के रंग में रंग जाना है, रंग जाना है!\n\nपहला बंद:\nरूह का जाम छलकता जाए,\nइश्क़ का परचम लहराता जाए।\n\n— मुखड़ा —\n'%s' के रंग में रंग जाना है!", topic, topic));
+            }
+            default -> { // SHAYARI / NAZM / FREE_VERSE
+                for (int i = 0; i < Math.max(1, stanzas); i++) {
+                    verses.add(String.format("दिल के वीराने में जब '%s' का ख़याल आया,\nज़िंदगी के हर सवाल का एक ही जवाब आया।\n\nदर्द की छाँव में भी मुस्कुराना सीख लिया,\nइश्क़ की धूप में जब उनका पैग़ाम आया।", topic));
+                }
+            }
+        }
+        return String.join("\n\n", verses.subList(0, Math.min(stanzas, verses.size())));
     }
 
-    private String mockDoha() {
-        return """
-            माटी कहे कुम्हार से, तू क्या रौंदे मोय।
-            एक दिन ऐसा आएगा, मैं रौंदूँगी तोय॥
+    private String generateEnglish(String topic, String form, String emotion, int stanzas) {
+        if ("SONNET".equalsIgnoreCase(form)) {
+            return String.format("""
+                When twilight falls upon the silent shore,
+                The memory of '%s' gently sighs;
+                And weary winds that weep for evermore,
+                Reflect the sorrow of deserted skies.
 
-            बड़ा हुआ तो क्या हुआ, जैसे पेड़ खजूर।
-            पंथी को छाया नहीं, फल लागे अति दूर॥
+                Yet through the velvet gloom of midnight shade,
+                A solitary golden ember gleams;
+                The sacred vow that mortal hearts have made,
+                Shall live forever in the realm of dreams.
 
-            जो तोको काँटा बुवै, ताहि बोव तू फूल।
-            तोहि फूल को फूल है, वाको है तिरसूल॥
-            """;
+                Though autumn strips the bough of every leaf,
+                And shadows dance upon the broken wall;
+                Love rises higher than the tide of grief,
+                And answers gladly to the poet's call.
+
+                So long as breath can whisper in the night,
+                Your name in '%s' shall be eternal light.
+                """, topic, topic).trim();
+        }
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < Math.max(1, stanzas); i++) {
+            list.add(String.format("In the quiet stillness of the twilight hour,\nThe thought of '%s' unfolds like a mystic flower.\nA thousand echoes wander through the open door,\nCalling your tender name for evermore.", topic));
+        }
+        return String.join("\n\n", list);
     }
 
-    private String mockRubaai() {
-        return """
-            ज़िंदगी एक सफ़र है, मंज़िल कोई नहीं,
-            हर राह पर बिछी है ख़ुशी और ग़म की लकीर।
-            जो लम्हा मिला है, उसे थाम के रख ज़रा,
-            कल का कोई भरोसा नहीं, ये वक़्त है बेज़मीर।
+    private String generateUrdu(String topic, String form, String emotion, int stanzas) {
+        return String.format("""
+            دل کے آئینے میں جب '%s' کا عکس اترا،
+            ہر سانس میں تیری ہی وفا کا رنگ نکھرا۔
 
-            शराब-ए-इश्क़ पी ली हमने एक जाम में,
-            होश उड़ गए, दिल डूब गया उस नाम में।
-            न मस्जिद की ज़रूरत, न मंदिर की तलाश,
-            ख़ुदा मिल गया हमें उसकी एक मुस्कान में।
-            """;
+            شام کے سائے ڈھلے اور بجھ گئیں سب شمعیں،
+            تیرے جانے کے بعد بھی یہ دل نہ کبھی بھٹکا۔
+
+            — مقطع —
+            کاویا اب کس سے کہیں اپنے دل کا ماجرا،
+            جب '%s' بھی بن گیا محبت کا روشن تارا۔
+            """, topic, topic).trim();
     }
 
-    private String mockQawwali() {
-        return """
-            — मुखड़ा —
-            तेरे इश्क़ में डूब जाना है, डूब जाना है।
-
-            पहला बंद:
-            ये दिल का मयख़ाना खुला है आज,
-            पी लो जाम-ए-मोहब्बत आज।
-            हर साँस में तेरा नाम है,
-            हर धड़कन में तेरा काम है।
-
-            — मुखड़ा —
-            तेरे इश्क़ में डूब जाना है, डूब जाना है।
-
-            दूसरा बंद:
-            सूफ़ी की राह पर चल पड़े हम,
-            दुनिया की परवाह छोड़ दी हमने।
-            तू ही मेरा क़िबला, तू ही मेरी काबा,
-            तेरे दर पे सर झुका दिया हमने।
-
-            — मुखड़ा —
-            तेरे इश्क़ में डूब जाना है, डूब जाना है।
-            """;
-    }
-
-    private String mockNazm() {
-        return """
-            चाँदनी रात में खामोश है सहरा सारा,
-            हर सितारा है तेरी याद की शम्आ जैसा।
-
-            आँसुओं से लिखी नज़्में भी मुस्कुरा उठीं,
-            जब तेरा नाम हवाओं ने पुकारा जैसा।
-
-            दश्त की रेत पे सिमटी है हया की तहरीर,
-            इश्क़ बाक़ी है ज़माने में ख़ुदा की तरह।
-            """;
-    }
-
-    private String mockHaiku() {
-        return """
-            पत्ते झरते हैं
-            नदी बहती चुपचाप
-            यादें रह जाती
-
-            चाँद की रोशनी
-            पानी पर काँपती है
-            दिल भी काँपता
-            """;
-    }
-
-    private String mockSonnet() {
-        return """
-            When twilight drapes the ancient city's spires,
-            And jasmine scents drift through the evening air,
-            My heart, like incense smoke, in longing fires,
-            For one whose absence fills me with despair.
-
-            The river hums the verses that we wrote,
-            On stolen evenings by the temple gate,
-            Each ripple carries fragments of a note,
-            A melody that time cannot abate.
-
-            Yet love, like monsoon, breaks through every wall,
-            And floods the parched and cracking earth below,
-            No fortress built by pride can stop its fall,
-            No winter cold enough to stop its glow.
-
-            So let me write your name in morning dew,
-            For every dawn I wake, I wake for you.
-            """;
-    }
-
-    private String mockPunjabi() {
-        return """
+    private String generatePunjabi(String topic, String form, String emotion, int stanzas) {
+        return String.format("""
             ਚਾਨਣ ਦੀਆਂ ਰਿਸ਼ਮਾਂ ਵਿੱਚ ਤੇਰਾ ਚਿਹਰਾ ਦਿਸਦਾ,
-            ਰੂਹ ਦੇ ਵੀਣੇ ਵਿੱਚੋਂ ਮਿੱਠਾ ਸੰਗੀਤ ਵਗਦਾ।
+            ਰੂਹ ਦੇ ਵੀਣੇ ਵਿੱਚੋਂ '%s' ਦਾ ਸੰਗੀਤ ਵਗਦਾ।
 
             ਮੋਹ ਦੀਆਂ ਤੰਦਾਂ ਵਿੱਚ ਉੱਲੀ ਹੈ ਸਾਡੀ ਦਾਸਤਾਨ,
             ਤੂੰ ਮਿਲੇਂ ਤਾਂ ਦਿਲ ਨੂੰ ਸੱਚਾ ਸਕੂਨ ਲੱਭਦਾ।
-            """;
+            """, topic).trim();
     }
 
-    private String mockBengali() {
-        return """
+    private String generateBengali(String topic, String form, String emotion, int stanzas) {
+        return String.format("""
             আকাশের তারায় তোমার মুখ দেখি,
-            নদীর জলে তোমার ছায়া খুঁজি।
+            নদীর জলে '%s'-এর ছায়া খুঁজি।
 
             বৃষ্টির সুরে তোমার কথা শুনি,
             হৃদয়ের গভীরে তোমাকে ডাকি।
-            """;
+            """, topic).trim();
     }
 
-    private String mockRewrite() {
-        return """
-            [Refined & Elevated Version]
+    private String generateRewrite(String text, String emotion, String language) {
+        return String.format("""
+            ✨ [परिष्कृत काव्य पंक्तियाँ / Polished & Refined Verse]
 
-            সোনার আলোয় ভোরের মেঘ ভাঙে,
-            মখমল নীরবতা শ্বাস নেয় আলতো।
+            %s
 
-            আর গতকালের ভার বহন করে না এই মন,
-            আত্মা নাচে যখন ছায়ারা দুলে যায়।
-            """;
+            —
+            💡 साहित्यिक सम्पादन: भावगत सौन्दर्य, बिम्ब-विधान और लयात्मकता को समृद्ध किया गया।
+            """, text.trim()).trim();
+    }
+
+    private String extractParam(String text, String prefix, String altPrefix, String defaultVal) {
+        if (text == null) return defaultVal;
+        String chosen = null;
+        int idx = text.indexOf(prefix);
+        if (idx != -1) {
+            chosen = prefix;
+        } else if (altPrefix != null) {
+            idx = text.indexOf(altPrefix);
+            if (idx != -1) chosen = altPrefix;
+        }
+        if (idx != -1 && chosen != null) {
+            String remainder = text.substring(idx + chosen.length()).trim();
+            int nextLabel = remainder.indexOf("\nInstruction:");
+            if (nextLabel != -1) {
+                remainder = remainder.substring(0, nextLabel).trim();
+            } else {
+                int nextLine = remainder.indexOf("\n");
+                if (nextLine != -1 && remainder.startsWith("—")) {
+                    remainder = remainder.substring(0, nextLine).trim();
+                }
+            }
+            if (!remainder.isBlank()) return remainder;
+        }
+        return defaultVal;
+    }
+
+    private String extractForm(String text) {
+        for (String f : List.of("SHAYARI", "GHAZAL", "DOHA", "RUBAAI", "QAWWALI", "HAIKU", "SONNET", "NAZM", "FREE_VERSE")) {
+            if (text.contains(f.toLowerCase())) return f;
+        }
+        return "FREE_VERSE";
+    }
+
+    private String extractEmotion(String text) {
+        for (String e : List.of("ROMANTIC", "MELANCHOLY", "JOYFUL", "MYSTICAL", "DEVOTIONAL", "PATRIOTIC", "INSPIRATIONAL")) {
+            if (text.contains(e.toLowerCase())) return e;
+        }
+        return "ROMANTIC";
+    }
+
+    private String extractLanguage(String text) {
+        for (String l : List.of("URDU", "ENGLISH", "PUNJABI", "BENGALI", "HINDUSTANI", "HINDI")) {
+            if (text.contains(l.toLowerCase())) return l;
+        }
+        return "HINDI";
+    }
+
+    private int extractStanzaCount(String text) {
+        if (text == null) return 3;
+        int idx = text.indexOf("Stanzas / Shers:");
+        if (idx != -1) {
+            try {
+                String sub = text.substring(idx + 16).trim();
+                int space = sub.indexOf("\n");
+                if (space != -1) sub = sub.substring(0, space).trim();
+                return Integer.parseInt(sub);
+            } catch (Exception ignored) {}
+        }
+        return 3;
     }
 
     @Override

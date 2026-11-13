@@ -13,6 +13,7 @@ const PremiumContext = createContext({
   status: 'ACTIVE',
   loading: true,
   refresh: () => {},
+  refreshSubscription: () => {},
 });
 
 export function PremiumProvider({ children }) {
@@ -50,6 +51,7 @@ export function PremiumProvider({ children }) {
     },
     loading,
     refresh,
+    refreshSubscription: refresh,
   };
 
   return (

@@ -18,7 +18,7 @@ public class LlmConfig {
     @Bean
     public LlmProvider llmProvider() {
         String provider = aiProperties.getProvider();
-        String apiKey = aiProperties.getApiKey();
+        String apiKey = aiProperties.getApiKey() != null ? aiProperties.getApiKey().strip() : null;
 
         if ("openai".equalsIgnoreCase(provider) && apiKey != null && !apiKey.isBlank()) {
             log.info("Initializing OpenAI LLM Provider with model {} and base URL {}", 

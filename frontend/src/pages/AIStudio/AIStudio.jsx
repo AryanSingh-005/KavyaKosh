@@ -18,7 +18,8 @@ const SAMPLE_PROMPTS = [
 
 const AIStudio = () => {
   const navigate = useNavigate();
-  const { tier, features, refreshSubscription } = usePremium();
+  const { tier, features, refresh, refreshSubscription } = usePremium();
+  const refreshTierStatus = refreshSubscription || refresh;
   const [activeMode, setActiveMode] = useState('GENERATE'); // GENERATE | REWRITE
 
   // Generation state
@@ -79,12 +80,12 @@ const AIStudio = () => {
       });
       setResult(data);
       fetchHistory(); // refresh history drawer
-      refreshSubscription(); // refresh daily generation limit status
-    } catch (err) {
-      const msg = err.response?.data?.message;
-      if (msg && !msg.toLowerCase().includes('ai generation failed')) {
-        setError(msg);
+      if (typeof refreshTierStatus === 'function') {
+        refreshTierStatus();
       }
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'AI Generation failed. Please check your backend connection or API quota.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -110,12 +111,12 @@ const AIStudio = () => {
       });
       setResult(data);
       fetchHistory();
-      refreshSubscription();
-    } catch (err) {
-      const msg = err.response?.data?.message;
-      if (msg && !msg.toLowerCase().includes('ai generation failed')) {
-        setError(msg);
+      if (typeof refreshTierStatus === 'function') {
+        refreshTierStatus();
       }
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'AI Rewrite failed. Please check your backend connection or API quota.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

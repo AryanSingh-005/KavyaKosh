@@ -1,9 +1,9 @@
 package com.verse.backend.ai;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,7 @@ public class OpenAiLlmProvider implements LlmProvider {
                 model, baseUrl, cleanKey.substring(0, Math.min(12, cleanKey.length())) + "...");
 
         this.restClient = RestClient.builder()
+                .requestFactory(new org.springframework.http.client.SimpleClientHttpRequestFactory())
                 .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + cleanKey)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -80,6 +81,10 @@ public class OpenAiLlmProvider implements LlmProvider {
             Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
             return ((String) message.get("content")).trim();
 
+        } catch (RestClientResponseException rre) {
+            String respBody = rre.getResponseBodyAsString();
+            log.error("OpenAI request failed (HTTP {}): {}", rre.getStatusCode(), respBody);
+            throw new RuntimeException("AI generation failed: " + respBody, rre);
         } catch (Exception e) {
             log.error("OpenAI request failed: {}", e.getMessage());
             throw new RuntimeException("AI generation failed: " + e.getMessage(), e);
